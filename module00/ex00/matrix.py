@@ -48,12 +48,14 @@ class Matrix:
 		# set shape
 		self.shape = (len((data[0])), len(data))
 
-	# def __str__(self):
-	# 	return self.data
+	def __str__(self):
+		if type(self) == Vector:
+			return 'Vector(' + str(self.data) + ')'
+		return 'Matrix(' + str(self.data) + ')'
 
 	def __repr__(self):
-		# if type(self) == Vector:
-		# 	return 'Vector(' + str(self.data) + ')'
+		if type(self) == Vector:
+			return 'Vector(' + str(self.data) + ')'
 		return 'Matrix(' + str(self.data) + ')'
 
 	def __add__(self, other):
@@ -159,13 +161,29 @@ class Matrix:
 
 class Vector(Matrix):
 	def __init__(self, arg):
-		super().__init__()
-		Matrix.__init__lst_(arg)
+		Matrix.__init__(self, arg)
+		try:
+			if self.shape[0] != 1 and self.shape[1] != 1:
+				raise TypeError("data must have only one dimession")
+		except TypeError as tp:
+			print("TypeError:", "Vector:", tp)
+
+	def dot(self, v):
+		try:
+			if self.shape[0] != len(v[0]) or self.shape[1] != len(v):
+				raise TypeError("The two vector must have the same shape")
+		except TypeError as tp:
+			print("TypeError:", "Vector:", tp)
+		res = [[i * v[0][x] for x, i in enumerate(j)] for j in self.data]
+		return Vector(res)
+
 
 m1 = Matrix([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
 m2 = Matrix([[2.0, 2.0, 2.0], [3.0, 3.0, 3.0], [10.0, 10.0, 10.0]])
-v1 = Vector([1.0, 2.0, 3.0])
-print(v1)
+v1 = Vector([[1.0, 2.0, 3.0]])
+res = v1.dot([[2.0, 2.0, 2.0]])
+print(res)
+# print(v1)
 res = m1 * m2
 #check __add__ que ce soit bien deux Matrix
 # print(res)
